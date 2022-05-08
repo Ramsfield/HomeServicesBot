@@ -100,6 +100,15 @@ async def speedup(ctx):
     else:
         return await ctx.send("Something went wrong")
 
+def timeToString(t):
+    hours = t // (60 * 60)
+    minutes = t // (60) - (hours * 60)
+    seconds = t - (hours * 60 * 60) - (minutes * 60)
+    hstring = f"{hours} hours" if hours != 0 else ""
+    mstring = f"{minutes} minutes" if minutes != 0 else ""
+    sstring = f"{seconds} seconds" if seconds != 0 else ""
+    return f"{hstring} {mstring} {sstring}"
+
 @bot.command(pass_context=True)
 async def isslow(ctx):
     """
@@ -112,14 +121,23 @@ async def isslow(ctx):
     if not slowed:
         return await ctx.send("Upload speeds currently at max")
     elif isSlow:
-        hours = current_sleep_time // (60 * 60)
-        minutes = current_sleep_time // (60) - (hours * 60)
-        seconds = current_sleep_time - (hours * 60 * 60) - (minutes * 60)
-        hstring = f"{hours} hours" if hours != 0 else ""
-        mstring = f"{minutes} minutes" if minutes != 0 else ""
-        sstring = f"{seconds} seconds" if seconds != 0 else ""
-        return await ctx.send(f"Upload speeds slowed for the next {hstring} {mstring} {sstring}")
+        return await ctx.send(f"Upload speeds slowed for the next {timeToString(current_sleep_time)}")
     else:
         return await ctx.send(f"Upload speeds are manually slowed down")
+
+@bot.command(pass_context=True)
+async def addtime(ctx):
+    """
+    Will add 30 minutes to the slowdown timer up to 2 hours
+    """
+    global sleep_time
+    global current_sleep_time
+    time_to_add = sleep_time - current_sleep_time
+    time_to_add = time_to_add if time_to_add < (30 * 60) else 30 * 60
+    current_sleep_time += time_to_add
+    addedString = timeToString(time_to_add)
+    if addedString = "":
+        addedString = "no time"
+    return await ctx.send(f"Added {timeToString(time_to_add)}, timer now at {timeToString(current_sleep_time)}")
 
 bot.run(secrets.TOKEN)
