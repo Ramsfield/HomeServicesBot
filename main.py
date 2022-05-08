@@ -55,12 +55,16 @@ def slowdownThread(ctx):
     loop.create_task(ctx.send("Upload speeds back to normal rates."))
     return
 
-@bot.command(pass_context=True)
+@bot.command(pass_context=True, hidden=True)
 async def ping(ctx):
     await ctx.send("pong")
 
 @bot.command(pass_context=True)
 async def slowdown(ctx):
+    """
+    Will slow down uploads for 2 hours
+    Hopefully freeing up enough bandwidth to stream easily
+    """
     global qbit
     global hours_to_sleep
     global sleep_time
@@ -82,6 +86,9 @@ async def slowdown(ctx):
 
 @bot.command(pass_context=True)
 async def speedup(ctx):
+    """
+    Speeds uploads back up, cancelling previous slowdowns
+    """
     global qbit
     slowed = qbit.transfer_upload_limit() > 0
     if not slowed:
@@ -95,6 +102,9 @@ async def speedup(ctx):
 
 @bot.command(pass_context=True)
 async def isslow(ctx):
+    """
+    Determines if a slowdown is in effect
+    """
     global qbit
     global isSlow
     global current_sleep_time
@@ -111,19 +121,5 @@ async def isslow(ctx):
         return await ctx.send(f"Upload speeds slowed for the next {hstring} {mstring} {sstring}")
     else:
         return await ctx.send(f"Upload speeds are manually slowed down")
-
-@bot.command(pass_context=True)
-async def clientInfo(ctx):
-    global qbit
-    lim = qbit.transfer_upload_limit()
-    await ctx.send(f"Was {lim}")
-    if lim == 0:
-        await ctx.send("Setting limit to 10240")
-        qbit.transfer_set_upload_limit(10240)
-    else:
-        await ctx.send("Setting limit to 0")
-        qbit.transfer_set_upload_limit(0)
-    lim = qbit.transfer_upload_limit()
-    return await ctx.send(f"{lim}")
 
 bot.run(secrets.TOKEN)
