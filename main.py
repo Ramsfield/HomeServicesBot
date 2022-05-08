@@ -136,7 +136,7 @@ async def addtime(ctx):
     time_to_add = time_to_add if time_to_add < (30 * 60) else 30 * 60
     current_sleep_time += time_to_add
     addedString = timeToString(time_to_add)
-    if addedString = "":
+    if addedString == "":
         addedString = "no time"
     return await ctx.send(f"Added {timeToString(time_to_add)}, timer now at {timeToString(current_sleep_time)}")
 
