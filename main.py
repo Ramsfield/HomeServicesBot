@@ -149,9 +149,9 @@ async def speedtest(ctx):
     ps = subprocess.run(['which', 'speedtest'], stdout=subprocess.PIPE)
     if(ps.returncode != 0):
         return await ctx.send("Speedtest not in path. Exiting")
-    program = ps.stdout
+    program = ps.stdout.decode('utf-8').rstrip()
     await ctx.send("Beginning speed test")
     ps = subprocess.run([program], stdout=subprocess.PIPE)
-    return await ctx.send(ps.stdout)
+    return await ctx.send(ps.stdout.decode('utf-8').rstrip())
 
 bot.run(secrets.TOKEN)
