@@ -152,6 +152,14 @@ async def speedtest(ctx):
     program = ps.stdout.decode('utf-8').rstrip()
     await ctx.send("Beginning speed test")
     ps = subprocess.run([program], stdout=subprocess.PIPE)
-    return await ctx.send(ps.stdout.decode('utf-8').rstrip())
+    output = ps.stdout.decode('utf-8').rstrip()
+    down = "0"
+    up = "0"
+    for line in output:
+        if line.startswith("Download"):
+            down = line[1:2]
+        elif line.startswith("Upload"):
+            up = line[1:2]
+    return await ctx.send(f"Download: {down}\nUpload: {up}")
 
 bot.run(secrets.TOKEN)
