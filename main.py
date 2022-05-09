@@ -1,6 +1,7 @@
 import discord
 import qbittorrentapi
 import threading
+import re
 from discord.ext import commands
 from time import sleep
 import asyncio
@@ -155,11 +156,10 @@ async def speedtest(ctx):
     output = ps.stdout.decode('utf-8')
     down = "0"
     up = "0"
-    for line in output.split('\n'):
-        if line.startswith("Download"):
-            down = line[1:2]
-        elif line.startswith("Upload"):
-            up = line[1:2]
+    dstring = "Download:\s+[\d.]+\s.bps"
+    ustring = "Upload:\s+[\d.]+\s.bps"
+    down = re.search(dstring, output)
+    up = re.search(ustring, output)
     return await ctx.send(f"Download: {down}\nUpload: {up}")
 
 bot.run(secrets.TOKEN)
