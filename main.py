@@ -158,8 +158,8 @@ async def speedtest(ctx):
     up = "0"
     dstring = "Download:\s+[\d.]+\s.bps"
     ustring = "Upload:\s+[\d.]+\s.bps"
-    down = re.search(dstring, output)
-    up = re.search(ustring, output)
+    down = re.search(dstring, output)[0]
+    up = re.search(ustring, output)[0]
     return await ctx.send(f"Download: {down}\nUpload: {up}")
 
 bot.run(secrets.TOKEN)
