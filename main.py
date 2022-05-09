@@ -152,10 +152,10 @@ async def speedtest(ctx):
     program = ps.stdout.decode('utf-8').rstrip()
     await ctx.send("Beginning speed test")
     ps = subprocess.run([program], stdout=subprocess.PIPE)
-    output = ps.stdout.decode('utf-8').rstrip()
+    output = ps.stdout.decode('utf-8')
     down = "0"
     up = "0"
-    for line in output:
+    for line in output.split('\n'):
         if line.startswith("Download"):
             down = line[1:2]
         elif line.startswith("Upload"):
