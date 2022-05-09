@@ -4,6 +4,7 @@ import threading
 from discord.ext import commands
 from time import sleep
 import asyncio
+import subprocess
 
 import secrets
 
@@ -139,5 +140,18 @@ async def addtime(ctx):
     if addedString == "":
         addedString = "no time"
     return await ctx.send(f"Added {timeToString(time_to_add)}, timer now at {timeToString(current_sleep_time)}")
+
+@bot.command(pass_context=True)
+async def speedtest(ctx):
+    """
+    Performs a speed test to determine the up and down speed of the server
+    """
+    ps = subprocess.run(['which', 'speedtest'], stdout=subprocess.PIPE)
+    if(ps.returncode != 0):
+        return await ctx.send("Speedtest not in path. Exiting")
+    program = ps.stdout
+    await ctx.send("Beginning speed test")
+    ps = subprocess.run([program], stdout=subprocess.PIPE)
+    return await ctx.send(ps.stdout)
 
 bot.run(secrets.TOKEN)
